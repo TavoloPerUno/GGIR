@@ -403,7 +403,7 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                       qqq = defdays$qqq
                                                       qqq_backup = defdays$qqq_backup
                                                       if (length(which(is.na(qqq)==TRUE)) == 0) { #if it is a meaningful day then none of the values in qqq should be NA
-                                                        if ((qqq[2] - qqq[1]) * ws3new > includedaycrit * 60 -1) {
+                                                        if ((qqq[2] - qqq[1]) * ws3new > includedaycrit.part5 * 60 -1) {
                                                           fi = 1
                                                           # START STORING BASIC INFORMATION
                                                           dsummary[di,fi:(fi+2)] = c(ID, fnames.ms3[i], wi)
