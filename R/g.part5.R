@@ -597,7 +597,7 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                           # TIME SPENT IN WINDOWS (window is either midnight-midnight or waking up-waking up)
                                                           test_remember = c(di,fi)
                                                           for (levelsc in 0:(length(Lnames)-1)) {
-                                                            if(grepl("spt", $Lnames[levelsc + 1], fixed=TRUE)) | (!skip_day_metrics){ 
+                                                            if(grepl("spt", Lnames[levelsc + 1], fixed=TRUE)) | (!skip_day_metrics){ 
                                                               dsummary[di,fi] = (length(which(LEVELS[sse] == levelsc)) * ws3new) / 60
                                                             }
                                                             else{
@@ -644,7 +644,7 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                           # AVERAGE ACC PER WINDOW
                                                           
                                                           for (levelsc in 0:(length(Lnames)-1)) {
-                                                            if(grepl("spt", $Lnames[levelsc + 1], fixed=TRUE)) | (!skip_day_metrics){ 
+                                                            if(grepl("spt", Lnames[levelsc + 1], fixed=TRUE)) | (!skip_day_metrics){ 
                                                               dsummary[di,fi] = mean(ts$ACC[sse[LEVELS[sse] == levelsc]], na.rm = TRUE)
                                                             }
                                                             else{
