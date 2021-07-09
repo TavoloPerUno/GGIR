@@ -354,6 +354,8 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                                            boutdur.lig,boutcriter.lig,
                                                                            boutdur.in,boutcriter.in,
                                                                            ws3new,bout.metric)
+                                                  saveRDS(levels, 
+                                                          file=paste(metadatadir,ms5.out,"/", TRLi, "_", TRMi, "_", TRVi, "_levels.rds",sep=""))
                                                   LEVELS = levels$LEVELS
                                                   OLEVELS = levels$OLEVELS
                                                   Lnames = levels$Lnames
