@@ -328,7 +328,7 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                               # extract nightsi again
                                               time_POSIX = ts$time #as.POSIXlt(iso8601chartime2POSIX(ts$time,tz=desiredtz),tz=desiredtz)
                                               tempp = unclass(time_POSIX)
-                                              saveRDS(ts, file=paste(metadatadir,ms5.out,"/ts.rds",sep=""))
+                                              
                                               if (is.na(tempp$sec[1]) == TRUE) {
                                                 tempp = unclass(as.POSIXlt(ts$time,tz=desiredtz))
                                               }
@@ -343,6 +343,7 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                               Nts = nrow(ts)
                                             }
                                             ts$window = 0
+                                            saveRDS(ts, file=paste(metadatadir,ms5.out,"/ts.rds",sep=""))
                                             for (TRLi in threshold.lig) {
                                               for (TRMi in threshold.mod) {
                                                 for (TRVi in threshold.vig) {
