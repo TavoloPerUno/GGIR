@@ -908,7 +908,8 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                           
                                                           }
                                                           
-                                                         
+                                                          saveRDS(dsummary, 
+                                                          file=paste(metadatadir,ms5.out,"/", wi, '_dsummary.rds',sep=""))
                                                           di = di + 1
                                                         }
                                                       }
@@ -966,6 +967,7 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                             }
                                           }
                                         }
+                                        
                                         # tidy up output data frame, because it may have a lot of empty rows and columns
                                         emptyrows = which(output[,1] == "" & output[,2] == "")
                                         if (length(emptyrows) > 0) output = output[-emptyrows,]
