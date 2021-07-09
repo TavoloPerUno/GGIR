@@ -375,14 +375,14 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                     if (timewindowi == "WW") {
                                                       if (length(FM) > 0) {
                                                         # ignore first and last midnight because we did not do sleep detection on it
-                                                        # nightsi = nightsi[nightsi > FM[1] & nightsi < FM[length(FM)]]
+                                                        nightsi = nightsi#[nightsi > FM[1] & nightsi < FM[length(FM)]]
                                                       }
                                                     } else {
                                                       # newly added on 31-3-2019, because if first night is missing then nights needs to allign with diur
                                                       startend_sleep = which(abs(diff(ts$diur))==1)
                                                       Nepochsin12Hours =  (60/ws3new)*60*12
-                                                      # nightsi = nightsi[nightsi >= (startend_sleep[1] - Nepochsin12Hours) &
-                                                      #                   nightsi <= (startend_sleep[length(startend_sleep)] + Nepochsin12Hours)]  # newly added on 25-11-2019
+                                                      nightsi = nightsi#[nightsi >= (startend_sleep[1] - Nepochsin12Hours) &
+                                                                          nightsi <= (startend_sleep[length(startend_sleep)] + Nepochsin12Hours)]  # newly added on 25-11-2019
                                                       #nightsi = nightsi[which(nightsi >= startend_sleep[1] & nightsi <= startend_sleep[length(startend_sleep)])]
                                                     }
                                                     if (timewindowi == "MM") {
@@ -400,12 +400,10 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                       defdays = g.part5.definedays(nightsi, wi, indjump,
                                                                                    nightsi_bu, ws3new, qqq_backup, ts, Nts,
                                                                                    timewindowi, Nwindows)
-                                                      saveRDS(defdays,file=paste(metadatadir,ms5.out,"/",wi, '_defdays.rds',sep=""))
                                                       qqq = defdays$qqq
                                                       qqq_backup = defdays$qqq_backup
                                                       if (length(which(is.na(qqq)==TRUE)) == 0) { #if it is a meaningful day then none of the values in qqq should be NA
-                                                        if ((qqq[2] - qqq[1]) * ws3new > 50) {
-                                                          saveRDS(wi,file=paste(metadatadir,ms5.out,"/",wi, '.rds',sep=""))
+                                                        if ((qqq[2] - qqq[1]) * ws3new >59) {
                                                           fi = 1
                                                           # START STORING BASIC INFORMATION
                                                           dsummary[di,fi:(fi+2)] = c(ID, fnames.ms3[i], wi)
