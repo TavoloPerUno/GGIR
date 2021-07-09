@@ -328,6 +328,7 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                               # extract nightsi again
                                               time_POSIX = ts$time #as.POSIXlt(iso8601chartime2POSIX(ts$time,tz=desiredtz),tz=desiredtz)
                                               tempp = unclass(time_POSIX)
+                                              saveRDS(ts, file=paste(metadatadir,ms5.out,"/ts.rds",sep=""))
                                               if (is.na(tempp$sec[1]) == TRUE) {
                                                 tempp = unclass(as.POSIXlt(ts$time,tz=desiredtz))
                                               }
@@ -375,14 +376,14 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                     if (timewindowi == "WW") {
                                                       if (length(FM) > 0) {
                                                         # ignore first and last midnight because we did not do sleep detection on it
-                                                        nightsi = nightsi#[nightsi > FM[1] & nightsi < FM[length(FM)]]
+                                                        nightsi = nightsi[nightsi > FM[1] & nightsi < FM[length(FM)]]
                                                       }
                                                     } else {
                                                       # newly added on 31-3-2019, because if first night is missing then nights needs to allign with diur
                                                       startend_sleep = which(abs(diff(ts$diur))==1)
                                                       Nepochsin12Hours =  (60/ws3new)*60*12
-                                                      nightsi = nightsi#[nightsi >= (startend_sleep[1] - Nepochsin12Hours) &
-                                                                        #  nightsi <= (startend_sleep[length(startend_sleep)] + Nepochsin12Hours)]  # newly added on 25-11-2019
+                                                      nightsi = nightsi[nightsi >= (startend_sleep[1] - Nepochsin12Hours) &
+                                                                          nightsi <= (startend_sleep[length(startend_sleep)] + Nepochsin12Hours)]  # newly added on 25-11-2019
                                                       #nightsi = nightsi[which(nightsi >= startend_sleep[1] & nightsi <= startend_sleep[length(startend_sleep)])]
                                                     }
                                                     if (timewindowi == "MM") {
