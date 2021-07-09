@@ -581,8 +581,9 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                             zt_hrs_total = (length(which(ts$diur[sse] == 0)) * ws3new) / 3600 #day
                                                             dsummary[di,fi] = (zt_hrs_nonwear/zt_hrs_total)  * 10000 / 100
                                                           }
-                                                          else:
+                                                          else{
                                                             dsummary[di,fi] = NA
+                                                          }
                                                           ds_names[fi] = "nonwear_perc_day";      fi = fi + 1
                                                           zt_hrs_nonwear = (length(which(ts$diur[sse] == 1 & ts$nonwear[sse] == 1)) * ws3new) / 3600 #night
                                                           zt_hrs_total = (length(which(ts$diur[sse] == 1)) * ws3new) / 3600 #night
