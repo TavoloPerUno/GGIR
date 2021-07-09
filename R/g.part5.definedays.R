@@ -50,7 +50,7 @@ g.part5.definedays = function(nightsi, wi, indjump, nightsi_bu,
       qqq = c(NA,NA)
     }
   } else if(timewindowi == "WW") {
-    if wi == 1{
+    if (wi == 1){
       qqq[1] = 0
       qqq[2] = which(diff(ts$diur) == -1)[wi]
     }
