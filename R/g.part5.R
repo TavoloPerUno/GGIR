@@ -382,7 +382,7 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                       startend_sleep = which(abs(diff(ts$diur))==1)
                                                       Nepochsin12Hours =  (60/ws3new)*60*12
                                                       nightsi = nightsi#[nightsi >= (startend_sleep[1] - Nepochsin12Hours) &
-                                                                          nightsi <= (startend_sleep[length(startend_sleep)] + Nepochsin12Hours)]  # newly added on 25-11-2019
+                                                                        #  nightsi <= (startend_sleep[length(startend_sleep)] + Nepochsin12Hours)]  # newly added on 25-11-2019
                                                       #nightsi = nightsi[which(nightsi >= startend_sleep[1] & nightsi <= startend_sleep[length(startend_sleep)])]
                                                     }
                                                     if (timewindowi == "MM") {
