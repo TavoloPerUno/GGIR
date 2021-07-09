@@ -50,16 +50,13 @@ g.part5.definedays = function(nightsi, wi, indjump, nightsi_bu,
       qqq = c(NA,NA)
     }
   } else if(timewindowi == "WW") {
-    if (wi <=(Nwindows-1)) { # all full wake to wake days
-      qqq[1] = which(diff(ts$diur) == -1)[wi] + 1
-      qqq[2] = which(diff(ts$diur) == -1)[wi+1]
-      
-    } else {
-      # time after last reliable waking up (this can be more than 24 hours)
-      # ignore this day, because if the night was ignored for sleep analysis
-      # then the description of the day in part 5 including that night is
-      # not informative.
-      qqq = c(NA, NA)
+    if (wi == 1){
+      qqq[1] = 1
+      qqq[2] = which(diff(ts$diur) == -1)[wi] + 1
+    }
+    else {
+      qqq[1] = which(diff(ts$diur) == -1)[wi-1] + 1
+      qqq[2] = which(diff(ts$diur) == -1)[wi]
     }
   }
   return(invisible(list(qqq=qqq,qqq_backup=qqq_backup)))
