@@ -344,6 +344,7 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                             }
                                             ts$window = 0
                                             saveRDS(ts, file=paste(metadatadir,ms5.out,"/ts.rds",sep=""))
+                                            save.image(file=paste(metadatadir,ms5.out,"/env.RData",sep=""))
                                             for (TRLi in threshold.lig) {
                                               for (TRMi in threshold.mod) {
                                                 for (TRVi in threshold.vig) {
@@ -371,24 +372,70 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                   #-------------------------------
                                                   # ignore all nights in 'inights' before the first waking up and after the last waking up
                                                   FM = which(diff(ts$diur) == -1)
+                                                  
+                                                  ## temp
+                                                  # vctr_slp_onset=which(diff(ts$diur)== 1)
+                                                  # vctr_wake=which(diff(ts$diur)== -1)
+                                                  # n_nights = min(c(length(vctr_slp_onset), length(vctr_wake)))
+                                                  # nsummary_extended = data.frame()
+                                                  # for (night in 1:n_nights){
+                                                  #   date = as.Date(ts$time[vctr_slp_onset[night]+1])
+                                                  #   weekday = weekdays(date)
+                                                  #   nsummary_extended[night, 'calendar_date'] = date
+                                                  #   nsummary_extended[night, 'weekday'] = weekday 
+                                                  #   nsummary_extended[night, 'ID'] = ID
+                                                  #   nsummary_extended[night, 'filename'] = fnames.ms3[i]
+                                                  #   nsummary_extended[night,"TRLi"] = TRLi
+                                                  #   nsummary_extended[night,"TRMi"] = TRMi
+                                                  #   nsummary_extended[night,"TRVi"] = TRVi
+                                                  #   sse = vctr_slp_onset[night]:vctr_wake[night]
+                                                  #   # percentage of available data
+                                                  #   zt_hrs_nonwear = (length(which(ts$diur[sse] == 1 & ts$nonwear[sse] == 1)) * ws3new) / 3600 #night
+                                                  #   zt_hrs_total = (length(which(ts$diur[sse] == 1)) * ws3new) / 3600 #night
+                                                  #   nsummary_extended[night,"nonwear_perc_spt"] =  (zt_hrs_nonwear/zt_hrs_total)  * 10000 / 100
+                                                  #   zt_hrs_nonwear = (length(which(ts$nonwear[sse] == 1)) * ws3new) / 3600
+                                                  #   zt_hrs_total = (length(ts$diur[sse]) * ws3new) / 3600 #night and day
+                                                  #   nsummary_extended[night,"nonwear_perc_day_spt"] =  (zt_hrs_nonwear/zt_hrs_total)  * 10000 / 100
+                                                  #   # TIME SPENT IN WINDOWS (window is either midnight-midnight or waking up-waking up)
+                                                  #   test_remember = c(di,fi)
+                                                  #   for (levelsc in 0:(length(Lnames)-1)) {
+                                                  #     if (grepl("spt", Lnames[levelsc + 1], fixed=TRUE)){
+                                                  #       dsummary[di,fi] = (length(which(LEVELS[sse] == levelsc)) * ws3new) / 60
+                                                  #     }
+                                                  #     dsummary[di,fi] = (length(which(LEVELS[sse] == levelsc)) * ws3new) / 60
+                                                  #     ds_names[fi] = paste0("dur_",Lnames[levelsc+1],"_min");      fi = fi + 1
+                                                  #   }
+                                                  #   for (g in 1:4) {
+                                                  #     dsummary[di,(fi+(g-1))] = (length(which(OLEVELS[sse] == g)) * ws3new) / 60
+                                                  #   }
+                                                  #   onsetwaketiming = g.part5.onsetwaketiming(c(vctr_slp_onset[1],
+                                                  #                                               vctr_wake[1]),
+                                                  #                                             ts, min, sec, hour, timewindow[1], 
+                                                  #                                             skiponset, skipwake)
+                                                  #   onset = onsetwaketiming$onset; wake = onsetwaketiming$wake
+                                                  #   onseti = onsetwaketiming$onseti; wakei = onsetwaketiming$wakei
+                                                  #   skiponset = onsetwaketiming$skiponset; skipwake = onsetwaketiming$skipwake
+                                                  # }
+                                                  
+                                                  
                                                   nightsi_bu = nightsi
                                                   # now 0.5+6+0.5 midnights and 7 days
                                                   for (timewindowi in timewindow) {
                                                     nightsi = nightsi_bu
                                                     ts$guider = "unknown"
-                                                    if (timewindowi == "WW") {
-                                                      if (length(FM) > 0) {
-                                                        # ignore first and last midnight because we did not do sleep detection on it
-                                                        nightsi = nightsi[nightsi > FM[1] & nightsi < FM[length(FM)]]
-                                                      }
-                                                    } else {
-                                                      # newly added on 31-3-2019, because if first night is missing then nights needs to allign with diur
-                                                      startend_sleep = which(abs(diff(ts$diur))==1)
-                                                      Nepochsin12Hours =  (60/ws3new)*60*12
-                                                      nightsi = nightsi[nightsi >= (startend_sleep[1] - Nepochsin12Hours) &
-                                                                          nightsi <= (startend_sleep[length(startend_sleep)] + Nepochsin12Hours)]  # newly added on 25-11-2019
-                                                      #nightsi = nightsi[which(nightsi >= startend_sleep[1] & nightsi <= startend_sleep[length(startend_sleep)])]
-                                                    }
+                                                    # if (timewindowi == "WW") {
+                                                    #   if (length(FM) > 0) {
+                                                    #     # ignore first and last midnight because we did not do sleep detection on it
+                                                    #     nightsi = nightsi[nightsi > FM[1] & nightsi < FM[length(FM)]]
+                                                    #   }
+                                                    # } else {
+                                                    #   # newly added on 31-3-2019, because if first night is missing then nights needs to allign with diur
+                                                    #   startend_sleep = which(abs(diff(ts$diur))==1)
+                                                    #   Nepochsin12Hours =  (60/ws3new)*60*12
+                                                    #   nightsi = nightsi[nightsi >= (startend_sleep[1] - Nepochsin12Hours) &
+                                                    #                       nightsi <= (startend_sleep[length(startend_sleep)] + Nepochsin12Hours)]  # newly added on 25-11-2019
+                                                    #   #nightsi = nightsi[which(nightsi >= startend_sleep[1] & nightsi <= startend_sleep[length(startend_sleep)])]
+                                                    # }
                                                     if (timewindowi == "MM") {
                                                       #  Nwindows = nrow(summarysleep_tmp2)
                                                       #  Nwindows = length(which(diff(ts$diur) == -1)) + 1
@@ -406,9 +453,26 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                                                    timewindowi, Nwindows)
                                                       qqq = defdays$qqq
                                                       qqq_backup = defdays$qqq_backup
+                                                      skip_day_metrics = FALSE
                                                       if (length(which(is.na(qqq)==TRUE)) == 0) { #if it is a meaningful day then none of the values in qqq should be NA
                                                         if ((qqq[2] - qqq[1]) * ws3new >59) {
                                                           fi = 1
+                                                          if (timewindowi == "WW") {
+                                                            if (length(FM) > 0) {
+                                                              # ignore first and last midnight because we did not do sleep detection on it
+                                                              if ((nightsi[wi] <= FM[1]) | (nightsi[wi] >=  FM[length(FM)])){
+                                                                skip_day_metrics = TRUE
+                                                              }
+                                                            }
+                                                          } else {
+                                                            # newly added on 31-3-2019, because if first night is missing then nights needs to allign with diur
+                                                            startend_sleep = which(abs(diff(ts$diur))==1)
+                                                            Nepochsin12Hours =  (60/ws3new)*60*12
+                                                            if ((nightsi < (startend_sleep[1] - Nepochsin12Hours)) | 
+                                                                (nightsi > (startend_sleep[length(startend_sleep)] + Nepochsin12Hours))){
+                                                              skip_day_metrics = TRUE
+                                                            }
+                                                          }
                                                           # START STORING BASIC INFORMATION
                                                           dsummary[di,fi:(fi+2)] = c(ID, fnames.ms3[i], wi)
                                                           ds_names[fi:(fi+2)] = c("ID", "filename", "window_number"); fi = fi + 3
@@ -512,9 +576,13 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                           sse = qqq1:qqq2
                                                           #============================================================
                                                           # percentage of available data
-                                                          zt_hrs_nonwear = (length(which(ts$diur[sse] == 0 & ts$nonwear[sse] == 1)) * ws3new) / 3600 #day
-                                                          zt_hrs_total = (length(which(ts$diur[sse] == 0)) * ws3new) / 3600 #day
-                                                          dsummary[di,fi] = (zt_hrs_nonwear/zt_hrs_total)  * 10000 / 100
+                                                          if (!skip_day_metrics){
+                                                            zt_hrs_nonwear = (length(which(ts$diur[sse] == 0 & ts$nonwear[sse] == 1)) * ws3new) / 3600 #day
+                                                            zt_hrs_total = (length(which(ts$diur[sse] == 0)) * ws3new) / 3600 #day
+                                                            dsummary[di,fi] = (zt_hrs_nonwear/zt_hrs_total)  * 10000 / 100
+                                                          }
+                                                          else:
+                                                            dsummary[di,fi] = NA
                                                           ds_names[fi] = "nonwear_perc_day";      fi = fi + 1
                                                           zt_hrs_nonwear = (length(which(ts$diur[sse] == 1 & ts$nonwear[sse] == 1)) * ws3new) / 3600 #night
                                                           zt_hrs_total = (length(which(ts$diur[sse] == 1)) * ws3new) / 3600 #night
@@ -528,18 +596,33 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                           # TIME SPENT IN WINDOWS (window is either midnight-midnight or waking up-waking up)
                                                           test_remember = c(di,fi)
                                                           for (levelsc in 0:(length(Lnames)-1)) {
-                                                            dsummary[di,fi] = (length(which(LEVELS[sse] == levelsc)) * ws3new) / 60
+                                                            if(grepl("spt", $Lnames[levelsc + 1], fixed=TRUE)) | (!skip_day_metrics){ 
+                                                              dsummary[di,fi] = (length(which(LEVELS[sse] == levelsc)) * ws3new) / 60
+                                                            }
+                                                            else{
+                                                              dsummary[di,fi] = NA
+                                                            }
                                                             ds_names[fi] = paste0("dur_",Lnames[levelsc+1],"_min");      fi = fi + 1
                                                           }
                                                           for (g in 1:4) {
+                                                            if (!skip_day_metrics){
                                                             dsummary[di,(fi+(g-1))] = (length(which(OLEVELS[sse] == g)) * ws3new) / 60
+                                                            }
+                                                            else{
+                                                              dsummary[di,(fi+(g-1))] = NA
+                                                            }
                                                           }
                                                           ds_names[fi:(fi+3)] = c("dur_day_total_IN_min",
                                                                                   "dur_day_total_LIG_min",
                                                                                   "dur_day_total_MOD_min",
                                                                                   "dur_day_total_VIG_min")
                                                           fi = fi + 4
-                                                          dsummary[di,fi] = (length(which(ts$diur[sse] == 0)) * ws3new) / 60
+                                                          if (!skip_day_metrics){
+                                                            dsummary[di,fi] = (length(which(ts$diur[sse] == 0)) * ws3new) / 60
+                                                          }
+                                                          else{
+                                                            dsummary[di,fi] = NA
+                                                          }
                                                           ds_names[fi] = "dur_day_min";      fi = fi + 1
                                                           dsummary[di,fi] = (length(which(ts$diur[sse] == 1)) * ws3new) / 60
                                                           ds_names[fi] = "dur_spt_min";      fi = fi + 1
@@ -560,16 +643,31 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                           # AVERAGE ACC PER WINDOW
                                                           
                                                           for (levelsc in 0:(length(Lnames)-1)) {
-                                                            dsummary[di,fi] = mean(ts$ACC[sse[LEVELS[sse] == levelsc]], na.rm = TRUE)
+                                                            if(grepl("spt", $Lnames[levelsc + 1], fixed=TRUE)) | (!skip_day_metrics){ 
+                                                              dsummary[di,fi] = mean(ts$ACC[sse[LEVELS[sse] == levelsc]], na.rm = TRUE)
+                                                            }
+                                                            else{
+                                                              dsummary[di,fi] = NA
+                                                            }
                                                             ds_names[fi] = paste("ACC_",Lnames[levelsc+1],"_mg",sep="");      fi = fi + 1
                                                           }
                                                           for (g in 1:4) {
+                                                            if (!skip_day_metrics){
                                                             dsummary[di,(fi+(g-1))] = mean(ts$ACC[sse[OLEVELS[sse] == g]], na.rm = TRUE)
+                                                            }
+                                                            else{
+                                                              dsummary[di,(fi+(g-1))] = NA
+                                                            }
                                                           }
                                                           ds_names[fi:(fi+3)] = c("ACC_day_total_IN_mg", "ACC_day_total_LIG_mg",
                                                                                   "ACC_day_total_MOD_mg", "ACC_day_total_VIG_mg")
                                                           fi = fi + 4
+                                                          if (!skip_day_metrics){
                                                           dsummary[di,fi] = mean(ts$ACC[sse[ts$diur[sse] == 0]], na.rm = TRUE)
+                                                          }
+                                                          else{
+                                                            dsummary[di,fi] = NA
+                                                          }
                                                           ds_names[fi] = "ACC_day_mg";      fi = fi + 1
                                                           dsummary[di,fi] = mean(ts$ACC[sse[ts$diur[sse] == 1]], na.rm = TRUE)
                                                           ds_names[fi] = "ACC_spt_mg";      fi = fi + 1
@@ -676,8 +774,62 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                           #===============================================
                                                           NANS = which(is.nan(dsummary[di,]) == TRUE) #average of no values will results in NaN
                                                           if (length(NANS) > 0) dsummary[di,NANS] = ""
+                                                          
+                                                          #===============================================
+                                                          # FOLDER STRUCTURE
+                                                          if (storefolderstructure == TRUE) {
+                                                            if ("filename_dir" %in% ds_names) fi = which( ds_names == "filename_dir")
+                                                            dsummary[di,fi] = fullfilenames[i] #full filename structure
+                                                            ds_names[fi] = "filename_dir"; fi = fi + 1
+                                                            dsummary[di,fi] = foldername[i] #store the lowest foldername
+                                                            if ("foldername" %in% ds_names) fi = which( ds_names == "foldername")
+                                                            ds_names[fi] = "foldername"; fi = fi + 1
+                                                          }
+                                                          
+                                                          #===============================================
+                                                          # FRAGMENTATION for daytime hours only
+                                                          if (length(frag.metrics) > 0) {
+                                                            frag.out = g.fragmentation(frag.metrics = frag.metrics,
+                                                                                       LEVELS = LEVELS[sse[ts$diur[sse] == 0]],
+                                                                                       Lnames = Lnames, xmin = 60/ws3new)
+                                                            # fragmentation values come with a lot of decimal places
+                                                            dsummary[di,fi:(fi+(length(frag.out)-1))] = round(as.numeric(frag.out), digits=5)
+                                                            ds_names[fi:(fi+(length(frag.out)-1))] = paste0("FRAG_",names(frag.out),"_day")
+                                                            fi = fi + length(frag.out)
+                                                          }
+                                                          #===============================================
+                                                          # LIGHT, IF AVAILABLE
+                                                          if ("lightpeak" %in% colnames(ts) & length(LUX_day_segments) > 0) {
+                                                            # mean LUX
+                                                            dsummary[di,fi] =  round(max(ts$lightpeak[sse[ts$diur[sse] == 0]], na.rm = TRUE), digits = 1)
+                                                            dsummary[di,fi + 1] =  round(mean(ts$lightpeak[sse[ts$diur[sse] == 0]], na.rm = TRUE), digits = 1)
+                                                            dsummary[di,fi + 2] =  round(mean(ts$lightpeak[sse[ts$diur[sse] == 1]], na.rm = TRUE), digits = 1)
+                                                            dsummary[di,fi + 3] =  round(mean(ts$lightpeak[sse[ts$diur[sse] == 0 & ts$ACC[sse] > TRMi]], na.rm = TRUE), digits = 1)
+                                                            ds_names[fi:(fi+3)] = c("LUX_max_day", "LUX_mean_day", "LUX_mean_spt", "LUX_mean_day_mvpa"); fi = fi + 4
+                                                            # time in LUX ranges
+                                                            Nluxt = length(LUXthresholds)
+                                                            for (lti in 1:Nluxt) {
+                                                              if (lti < Nluxt) {
+                                                                dsummary[di,fi+lti-1] =  length(which(ts$lightpeak[sse[ts$diur[sse] == 0]] >= LUXthresholds[lti] &
+                                                                                                        ts$lightpeak[sse[ts$diur[sse] == 0]] < LUXthresholds[lti+1])) / (60/ws3new)
+                                                                ds_names[fi+lti-1] = paste0("LUX_min_",LUXthresholds[lti],"_",LUXthresholds[lti+1],"_day")
+                                                              } else {
+                                                                dsummary[di,fi+lti-1] =  length(which(ts$lightpeak[sse[ts$diur[sse] == 0]] >= LUXthresholds[lti])) / (60/ws3new)
+                                                                ds_names[fi+lti-1] = paste0("LUX_min_",LUXthresholds[lti],"_inf_day")
+                                                              }
+                                                            }
+                                                            fi = fi + Nluxt
+                                                            if (timewindowi =="WW") {
+                                                              # LUX per segment of the day
+                                                              luxperseg = g.part5.lux_persegment(ts, sse, LUX_day_segments, ws3new) 
+                                                              dsummary[di,fi:(fi+(length(luxperseg$values)-1))] = luxperseg$values
+                                                              ds_names[fi:(fi+(length(luxperseg$values)-1))] = luxperseg$names
+                                                              fi = fi + length(luxperseg$values)
+                                                            }
+                                                          }
                                                           #===============================================
                                                           # NUMBER OF BOUTS
+                                                          if(!skip_day_metrics){
                                                           checkshape = function(boutcount) {
                                                             if (is.matrix(boutcount) == FALSE) {# if there is only one bout setting
                                                               boutcount = as.matrix(boutcount)
@@ -752,57 +904,10 @@ g.part5 = function(datadir=c(),metadatadir=c(),f0=c(),f1=c(),strategy=1,maxdur=7
                                                             ds_names[fi:(fi+2)] = c("ig_gradient","ig_intercept","ig_rsquared")
                                                             fi = fi + 3
                                                           }
-                                                          #===============================================
-                                                          # FRAGMENTATION for daytime hours only
-                                                          if (length(frag.metrics) > 0) {
-                                                            frag.out = g.fragmentation(frag.metrics = frag.metrics,
-                                                                                       LEVELS = LEVELS[sse[ts$diur[sse] == 0]],
-                                                                                       Lnames = Lnames, xmin = 60/ws3new)
-                                                            # fragmentation values come with a lot of decimal places
-                                                            dsummary[di,fi:(fi+(length(frag.out)-1))] = round(as.numeric(frag.out), digits=5)
-                                                            ds_names[fi:(fi+(length(frag.out)-1))] = paste0("FRAG_",names(frag.out),"_day")
-                                                            fi = fi + length(frag.out)
+                                                          
                                                           }
-                                                          #===============================================
-                                                          # LIGHT, IF AVAILABLE
-                                                          if ("lightpeak" %in% colnames(ts) & length(LUX_day_segments) > 0) {
-                                                            # mean LUX
-                                                            dsummary[di,fi] =  round(max(ts$lightpeak[sse[ts$diur[sse] == 0]], na.rm = TRUE), digits = 1)
-                                                            dsummary[di,fi + 1] =  round(mean(ts$lightpeak[sse[ts$diur[sse] == 0]], na.rm = TRUE), digits = 1)
-                                                            dsummary[di,fi + 2] =  round(mean(ts$lightpeak[sse[ts$diur[sse] == 1]], na.rm = TRUE), digits = 1)
-                                                            dsummary[di,fi + 3] =  round(mean(ts$lightpeak[sse[ts$diur[sse] == 0 & ts$ACC[sse] > TRMi]], na.rm = TRUE), digits = 1)
-                                                            ds_names[fi:(fi+3)] = c("LUX_max_day", "LUX_mean_day", "LUX_mean_spt", "LUX_mean_day_mvpa"); fi = fi + 4
-                                                            # time in LUX ranges
-                                                            Nluxt = length(LUXthresholds)
-                                                            for (lti in 1:Nluxt) {
-                                                              if (lti < Nluxt) {
-                                                                dsummary[di,fi+lti-1] =  length(which(ts$lightpeak[sse[ts$diur[sse] == 0]] >= LUXthresholds[lti] &
-                                                                                                        ts$lightpeak[sse[ts$diur[sse] == 0]] < LUXthresholds[lti+1])) / (60/ws3new)
-                                                                ds_names[fi+lti-1] = paste0("LUX_min_",LUXthresholds[lti],"_",LUXthresholds[lti+1],"_day")
-                                                              } else {
-                                                                dsummary[di,fi+lti-1] =  length(which(ts$lightpeak[sse[ts$diur[sse] == 0]] >= LUXthresholds[lti])) / (60/ws3new)
-                                                                ds_names[fi+lti-1] = paste0("LUX_min_",LUXthresholds[lti],"_inf_day")
-                                                              }
-                                                            }
-                                                            fi = fi + Nluxt
-                                                            if (timewindowi =="WW") {
-                                                              # LUX per segment of the day
-                                                              luxperseg = g.part5.lux_persegment(ts, sse, LUX_day_segments, ws3new) 
-                                                              dsummary[di,fi:(fi+(length(luxperseg$values)-1))] = luxperseg$values
-                                                              ds_names[fi:(fi+(length(luxperseg$values)-1))] = luxperseg$names
-                                                              fi = fi + length(luxperseg$values)
-                                                            }
-                                                          }
-                                                          #===============================================
-                                                          # FOLDER STRUCTURE
-                                                          if (storefolderstructure == TRUE) {
-                                                            if ("filename_dir" %in% ds_names) fi = which( ds_names == "filename_dir")
-                                                            dsummary[di,fi] = fullfilenames[i] #full filename structure
-                                                            ds_names[fi] = "filename_dir"; fi = fi + 1
-                                                            dsummary[di,fi] = foldername[i] #store the lowest foldername
-                                                            if ("foldername" %in% ds_names) fi = which( ds_names == "foldername")
-                                                            ds_names[fi] = "foldername"; fi = fi + 1
-                                                          }
+                                                          
+                                                         
                                                           di = di + 1
                                                         }
                                                       }
